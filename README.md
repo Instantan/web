@@ -1,6 +1,4 @@
-# Web: The Zero-Dependency Go Web Framework
-
-Build robust web applications with pure Go. No external dependencies, just the power of the standard library.
+<img src="https://github.com/Instantan/web/blob/6ab9f9f33b150fb04f4b3ad2f91ae3f455b2baf1/website/src/assets/social-preview.png" alt="Web: The Zero-Dependency Go Web Framework" />
 
 ## Key Features
 - **Zero Dependencies**: Built entirely on Go's standard library. No external packages required.
