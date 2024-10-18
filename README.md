@@ -67,4 +67,5 @@ func main() {
 
 ---
 
-Check out the [documentation](https://web.instantan.io) for more!
+[![Go Report Card](https://goreportcard.com/badge/github.com/Instantan/web)](https://goreportcard.com/report/github.com/Instantan/web)
+
