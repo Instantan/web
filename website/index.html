@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>web: The Zero-Dependency Go Web Framework</title>
+</head>
+
+<body>
+  <script>
+    setTimeout(() => {
+      const sparkles = document.querySelectorAll('.sparkle');
+
+      function animateSparkles() {
+        sparkles.forEach((sparkle) => {
+          const randomDelay = Math.random() * 2000; // Random delay between 0 and 3000ms
+          setTimeout(() => {
+            sparkle.style.opacity = 1;
+            setTimeout(() => {
+              sparkle.style.opacity = 0;
+            }, 500); // Duration of sparkle visibility
+          }, randomDelay);
+        });
+      }
+
+      const codeElements = document.querySelectorAll('code');
+      codeElements.forEach((code) => {
+        code.addEventListener('click', () => {
+          navigator.clipboard.writeText(code.textContent).then(() => {
+          }).catch(err => {
+            console.error('Failed to copy: ', err);
+          });
+        });
+      });
+
+      setInterval(animateSparkles, 3000);
+    }, 1000)
+  </script>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
+</html>

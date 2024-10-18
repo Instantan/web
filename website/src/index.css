@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.border-gray-800 {
+  border-color: #2d2d2d;
+}
+
+:root {
+  --bg: #0f0f0f;
+}
+
+body, .bg-default {
+  background-color: var(--bg);
+}
+
+
+.container {
+  margin: auto;
+}
+
+.gopher {
+  transform: translate(20%, 85%);
+  z-index: -1;
+}
+
+.sparkle {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+code:hover {
+  cursor: pointer;
+}
+
+h3 {
+  text-align: center;
+}
+
+/* Media query for large screens (desktops) */
+@media (min-width: 1200px) {
+  .gopher {
+    transform: translate(20%, 85%);
+  }
+}
+
+/* Media query for medium screens (tablets) */
+@media (min-width: 768px) and (max-width: 1199px) {
+  .gopher {
+    transform: translate(45%, 85%);
+  }
+}
+
+/* Media query for small screens (phones) */
+@media (max-width: 767px) {
+  .gopher {
+    transform: translate(40%, 90%);
+  }
+}
+
+/* Media query for extra small screens (small phones) */
+@media (max-width: 480px) {
+  .gopher {
+    transform: translate(40%, 95%);
+  }
+}
+
