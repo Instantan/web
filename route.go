@@ -113,7 +113,7 @@ func (g Group) openapiPaths(mux *http.ServeMux, components *openapi.Components, 
 				operation.RequestBody.Required = !api.Parameter.Body.Optional
 				operation.RequestBody.Description = api.Parameter.Body.Description
 				content := operation.RequestBody.Content["text/*"]
-				content.Example = ""
+				content.Example = api.Parameter.Body.Value
 				s := *openapi.ValueToSchema(api.Parameter.Body.Value)
 				if s.TypeName == "" {
 					content.Schema = s
@@ -122,7 +122,7 @@ func (g Group) openapiPaths(mux *http.ServeMux, components *openapi.Components, 
 					components.Schemas[s.TypeName] = s
 				}
 
-				operation.RequestBody.Content["*/*"] = content
+				operation.RequestBody.Content["application/json"] = content
 			}
 			if len(api.Parameter.Cookie) > 0 {
 				for key, value := range api.Parameter.Cookie {
@@ -176,6 +176,7 @@ func (g Group) openapiPaths(mux *http.ServeMux, components *openapi.Components, 
 			createResponse := func(description string, value any) openapi.Response {
 				content := openapi.MediaType{}
 				s := *openapi.ValueToSchema(value)
+				content.Example = value
 				if s.TypeName == "" {
 					content.Schema = s
 				} else {
@@ -186,7 +187,7 @@ func (g Group) openapiPaths(mux *http.ServeMux, components *openapi.Components, 
 				return openapi.Response{
 					Description: description,
 					Content: map[string]openapi.MediaType{
-						"*/*": content,
+						"application/json": content,
 					},
 				}
 			}
