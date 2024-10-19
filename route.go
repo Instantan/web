@@ -236,14 +236,21 @@ func (g Group) openapiPaths(mux *http.ServeMux, components *openapi.Components, 
 			defaults = mergeDefaults(*r.defaults)
 		} else if r.use != nil {
 			if use != nil {
-				use = Chain(use)
+				use = Chain(use, *r.use)
+			} else {
+				use = *r.use
 			}
 		} else if r.static != nil {
-			server := http.StripPrefix(r.static.PathPrefix, http.FileServer(r.static.FS))
-			if r.static.SpaMode {
-				mux.Handle(http.MethodGet+" "+r.static.PathPrefix, createSpaModeRedirect(server))
+			var handler http.Handler
+			if use != nil {
+				handler = http.StripPrefix(r.static.PathPrefix, use(http.FileServer(r.static.FS)))
 			} else {
-				mux.Handle(http.MethodGet+" "+r.static.PathPrefix, server)
+				handler = http.StripPrefix(r.static.PathPrefix, http.FileServer(r.static.FS))
+			}
+			if r.static.SpaMode {
+				mux.Handle(http.MethodGet+" "+r.static.PathPrefix, createSpaModeRedirect(handler))
+			} else {
+				mux.Handle(http.MethodGet+" "+r.static.PathPrefix, handler)
 			}
 		}
 	}

@@ -38,6 +38,22 @@ func main() {
 		})
 	})
 
+	w.Use(func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			log.Printf(r.RemoteAddr)
+			next.ServeHTTP(w, r)
+		})
+	})
+
+	w.Group(func(w web.Group) {
+		w.Use(func(next http.Handler) http.Handler {
+			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				log.Println("in group")
+				next.ServeHTTP(w, r)
+			})
+		})
+	})
+
 	w.Api(web.Api{
 		Method: http.MethodGet,
 		Path:   "/test/{name}",

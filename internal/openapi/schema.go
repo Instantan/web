@@ -26,6 +26,11 @@ func generateSchema(value any) *Schema {
 		return &Schema{Type: "null"}
 	}
 
+	s := schemaForWellKnownTypes(value)
+	if s != nil {
+		return s
+	}
+
 	t := reflect.TypeOf(value)
 	v := reflect.ValueOf(value)
 
