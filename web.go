@@ -39,6 +39,11 @@ type License struct {
 	Identifier string
 }
 
+type Tag struct {
+	Name        string
+	Description string
+}
+
 type ExternalDocumentation struct {
 	Description string
 	Url         string
@@ -48,14 +53,6 @@ type OpenApi struct {
 	DocPath   string
 	UiPath    string
 	UiVariant string
-}
-
-type Defaults struct {
-	Query     Query
-	Header    Header
-	Cookie    Cookie
-	Body      Body
-	Responses Responses
 }
 
 type TypescriptApi struct {
@@ -85,6 +82,10 @@ func (web *Web) License(license License) {
 	web.license = &license
 }
 
+func (web *Web) Tag(tag Tag) {
+	web.group.Tag(tag)
+}
+
 func (web *Web) ExternalDocumentation(externalDocumentation ExternalDocumentation) {
 	assertIsNotEmpty("ExternalDocumentation.Url", externalDocumentation.Url)
 	web.externalDocumentation = externalDocumentation
@@ -107,10 +108,6 @@ func (web *Web) Api(route Api) {
 
 func (web *Web) Static(static Static) {
 	web.group.Static(static)
-}
-
-func (web *Web) Defaults(defaults Defaults) {
-	web.group.Defaults(defaults)
 }
 
 func (web *Web) Group(group func(Group)) {
@@ -137,11 +134,17 @@ func (web *Web) Server() http.Handler {
 		PathItems:       map[string]openapi.PathItem{},
 	}
 
+	tags := &tags{
+		tags:       &map[string]Tag{},
+		references: []string{},
+	}
+
 	openapi := openapi.OpenAPI{}
 	openapi.OpenApi = "3.1.0"
 	openapi.Info = web.info.openapiInfo()
-	openapi.Paths = *web.group.openapiPaths(mux, components, nil, Defaults{})
+	openapi.Paths = *web.group.openapiPaths(mux, components, nil, tags)
 	openapi.Components = *components
+	openapi.Tags = tags.openapiTags()
 
 	if web.contact != nil {
 		openapi.Info.Contact = web.contact.openapiContact()

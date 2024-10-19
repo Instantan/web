@@ -13,7 +13,6 @@ type Use func(next http.Handler) http.Handler
 type Api struct {
 	Method      string
 	Path        string
-	Tags        []string
 	OperationId string
 	Summary     string
 	Description string
@@ -36,16 +35,27 @@ type Static struct {
 }
 
 type route struct {
-	use      *Use
-	api      *Api
-	static   *Static
-	defaults *Defaults
-	group    *Group
+	use    *Use
+	api    *Api
+	static *Static
+	tag    *Tag
+	group  *Group
+}
+
+type tags struct {
+	tags       *map[string]Tag
+	references []string
 }
 
 func (g Group) Use(use Use) {
 	*g.routes = append(*g.routes, route{
 		use: &use,
+	})
+}
+
+func (g Group) Tag(tag Tag) {
+	*g.routes = append(*g.routes, route{
+		tag: &tag,
 	})
 }
 
@@ -73,12 +83,6 @@ func (g Group) Static(static Static) {
 	})
 }
 
-func (g Group) Defaults(defaults Defaults) {
-	*g.routes = append(*g.routes, route{
-		defaults: &defaults,
-	})
-}
-
 func (g Group) Group(group func(Group)) {
 	gr := Group{
 		routes: &[]route{},
@@ -89,7 +93,30 @@ func (g Group) Group(group func(Group)) {
 	})
 }
 
-func (g Group) openapiPaths(mux *http.ServeMux, components *openapi.Components, use Use, defaults Defaults) *openapi.Paths {
+func (t *tags) clone() *tags {
+	return &tags{
+		tags:       t.tags,
+		references: append([]string{}, t.references...),
+	}
+}
+
+func (t *tags) add(tag Tag) {
+	(*t.tags)[tag.Name] = tag
+	t.references = append(t.references, tag.Name)
+}
+
+func (t *tags) openapiTags() []openapi.Tag {
+	tags := []openapi.Tag{}
+	for _, tag := range *t.tags {
+		tags = append(tags, openapi.Tag{
+			Name:        tag.Name,
+			Description: tag.Description,
+		})
+	}
+	return tags
+}
+
+func (g Group) openapiPaths(mux *http.ServeMux, components *openapi.Components, use Use, tags *tags) *openapi.Paths {
 	paths := &openapi.Paths{}
 
 	for i := range *g.routes {
@@ -101,7 +128,7 @@ func (g Group) openapiPaths(mux *http.ServeMux, components *openapi.Components, 
 
 			operation := &openapi.Operation{
 				OperationId: api.OperationId,
-				Tags:        api.Tags,
+				Tags:        tags.references,
 				Summary:     api.Summary,
 				Description: api.Description,
 				Responses: openapi.Responses{
@@ -121,7 +148,6 @@ func (g Group) openapiPaths(mux *http.ServeMux, components *openapi.Components, 
 					content.Schema.Ref = "#/components/schemas/" + s.TypeName
 					components.Schemas[s.TypeName] = s
 				}
-
 				operation.RequestBody.Content["application/json"] = content
 			}
 			if len(api.Parameter.Cookie) > 0 {
@@ -229,11 +255,11 @@ func (g Group) openapiPaths(mux *http.ServeMux, components *openapi.Components, 
 			}
 		} else if r.group != nil {
 			group := r.group
-			for path, item := range group.openapiPaths(mux, components, use, defaults).Iterate() {
+			for path, item := range group.openapiPaths(mux, components, use, tags.clone()).Iterate() {
 				paths.Set(path, item)
 			}
-		} else if r.defaults != nil {
-			defaults = mergeDefaults(*r.defaults)
+		} else if r.tag != nil {
+			tags.add(*r.tag)
 		} else if r.use != nil {
 			if use != nil {
 				use = Chain(use, *r.use)

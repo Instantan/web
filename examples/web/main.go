@@ -30,12 +30,9 @@ func main() {
 		UiVariant: "scalar",
 	})
 
-	w.Group(func(g web.Group) {
-		g.Defaults(web.Defaults{
-			Query: web.Query{
-				"": web.QueryParam{},
-			},
-		})
+	w.Tag(web.Tag{
+		Name:        "demo",
+		Description: "demodescription",
 	})
 
 	w.Use(func(next http.Handler) http.Handler {
@@ -76,6 +73,19 @@ func main() {
 				Say: "Hello " + r.PathValue("name"),
 			})
 			w.Write(res)
+		}),
+	})
+
+	w.Api(web.Api{
+		Method:    http.MethodGet,
+		Path:      "/test",
+		Parameter: web.Parameter{},
+		Responses: web.Responses{
+			StatusOK: ResponseTest{Say: "Hello world"},
+		},
+		Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Add("content-type", "application/json")
+			w.Write([]byte("test"))
 		}),
 	})
 

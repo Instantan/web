@@ -17,6 +17,16 @@ type Api =
     status: 200,
     body: ResponseTest
   }>
+      (api: {
+    method: 'GET',
+    path: '/test',
+    params: {
+      header?: Record<string, string>,
+    }
+  }) => Promise<{
+    status: 200,
+    body: ResponseTest
+  }>
     
 
 type ResponseTest = {
