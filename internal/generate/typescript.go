@@ -60,11 +60,11 @@ func GenerateTypescriptModels(api openapi.OpenAPI) []byte {
 		must(b.WriteString("/**\n *  " + api.Info.Title + " " + api.Info.Version + "\n */\n"))
 	}
 	if api.Paths.Len() > 0 {
-		must(b.WriteString("type Api = \n"))
+		must(b.WriteString("interface Api {\n"))
 		for route, path := range api.Paths.Iterate() {
 			writeTypescriptFunctionInterfaceToBuffer(b, route, path)
 		}
-		must(b.WriteString(""))
+		must(b.WriteString("}"))
 		must(b.WriteString("\n"))
 	}
 
@@ -79,7 +79,6 @@ func GenerateTypescriptModels(api openapi.OpenAPI) []byte {
 
 func writeTypescriptFunctionInterfaceToBuffer(b *bytes.Buffer, route string, path openapi.PathItem) {
 	for method, operation := range path.IterateOperations() {
-
 		writeIntentToBuffer(b, 1)
 		must(b.WriteString("(api: {\n"))
 		{
@@ -158,7 +157,7 @@ func writeTypescriptFunctionInterfaceToBuffer(b *bytes.Buffer, route string, pat
 		{
 			// Response
 			writeIntentToBuffer(b, 1)
-			must(b.WriteString("}) => "))
+			must(b.WriteString("}): "))
 			must(b.WriteString("Promise<"))
 			c := 0
 			for code, response := range operation.Responses.Iterate() {
@@ -185,8 +184,7 @@ func writeTypescriptFunctionInterfaceToBuffer(b *bytes.Buffer, route string, pat
 				writeIntentToBuffer(b, 1)
 				must(b.WriteString("}"))
 			}
-			must(b.WriteString(">\n"))
-			writeIntentToBuffer(b, 2)
+			must(b.WriteString(">;\n"))
 		}
 	}
 }

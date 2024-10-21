@@ -21,6 +21,14 @@ func ValueToSchema(value any) *Schema {
 	return generateSchema(value)
 }
 
+func valuesToSchemas(values []any) []Schema {
+	schemas := []Schema{}
+	for _, value := range values {
+		schemas = append(schemas, *ValueToSchema(value))
+	}
+	return schemas
+}
+
 func generateSchema(value any) *Schema {
 	if value == nil {
 		return &Schema{Type: "null"}

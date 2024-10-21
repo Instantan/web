@@ -2,8 +2,10 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/Instantan/web"
 )
@@ -52,8 +54,9 @@ func main() {
 	})
 
 	w.Api(web.Api{
-		Method: http.MethodGet,
-		Path:   "/test/{name}",
+		Method:      http.MethodGet,
+		Path:        "/test/{name}",
+		Description: "blabla",
 		Parameter: web.Parameter{
 			Path: web.Path{
 				"name": web.PathParam{
@@ -89,6 +92,29 @@ func main() {
 		}),
 	})
 
+	w.Api(web.Api{
+		Method:    http.MethodGet,
+		Path:      "/sse",
+		Parameter: web.Parameter{},
+		Responses: web.Responses{
+			StatusOK: ResponseTest{Say: "Hello world"},
+		},
+		Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			log.Printf("%v", r.Header)
+			w.Header().Set("Content-Type", "text/event-stream")
+			w.Header().Set("Cache-Control", "no-cache")
+			w.Header().Set("Connection", "keep-alive")
+
+			for i := 0; i < 10; i++ {
+				fmt.Fprintf(w, "data: %s\n\n", fmt.Sprintf("Event %d", i))
+				time.Sleep(2 * time.Second)
+				w.(http.Flusher).Flush()
+			}
+
+			<-r.Context().Done()
+		}),
+	})
+
 	w.Static(web.Static{
 		PathPrefix: "/",
 		SpaMode:    true,
@@ -100,7 +126,7 @@ func main() {
 	})
 
 	log.Println("Server listening on :8082")
-	log.Println("Visist http://localhost:8082/api/doc to view the documentation")
+	log.Println("Visit http://localhost:8082/api/doc to view the documentation")
 	if err := http.ListenAndServe(":8082", w.Server()); err != nil {
 		panic(err)
 	}

@@ -3,7 +3,7 @@
 /**
  *  Bla 0.0.1
  */
-type Api = 
+interface Api {
   (api: {
     method: 'GET',
     path: '/test/{name}',
@@ -13,21 +13,31 @@ type Api =
       },
       header?: Record<string, string>,
     }
-  }) => Promise<{
+  }): Promise<{
     status: 200,
     body: ResponseTest
-  }>
-      (api: {
+  }>;
+  (api: {
     method: 'GET',
     path: '/test',
     params: {
       header?: Record<string, string>,
     }
-  }) => Promise<{
+  }): Promise<{
     status: 200,
     body: ResponseTest
-  }>
-    
+  }>;
+  (api: {
+    method: 'GET',
+    path: '/sse',
+    params: {
+      header?: Record<string, string>,
+    }
+  }): Promise<{
+    status: 200,
+    body: ResponseTest
+  }>;
+}
 
 type ResponseTest = {
   say: string;

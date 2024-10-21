@@ -1,6 +1,8 @@
 package openapi
 
-import "time"
+import (
+	"time"
+)
 
 func schemaForWellKnownTypes(value any) *Schema {
 	switch v := value.(type) {
