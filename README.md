@@ -1,4 +1,4 @@
-<img src="https://github.com/Instantan/web/blob/6ab9f9f33b150fb04f4b3ad2f91ae3f455b2baf1/website/src/assets/social-preview.png" alt="Web: The Zero-Dependency Go Web Framework" />
+<img src="https://github.com/Instantan/web/blob/e6d6dfdecccc35591cf2889d6b8430f8873f2812/website/src/assets/social-preview.png?raw=true" alt="Web: The Zero-Dependency Go Web Framework" />
 
 > Warning: This package is currently (not even) in alpha, not really tested yet and should not be used yet
 
