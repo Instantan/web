@@ -7,18 +7,20 @@ export default function LandingPage() {
   return (
     <div className="flex flex-col min-h-screen bg-default text-gray-100">
       <header className="px-4 lg:px-6 h-14 flex items-center border-b border-gray-800">
-        <a className="flex items-center justify-center" href="#">
-          <Webhook className="h-6 w-6 mr-2 text-emerald-400" />
-          <span className="font-bold text-lg text-emerald-400">web</span>
-        </a>
-        <nav className="ml-auto flex gap-4 sm:gap-6">
-          <a className="text-sm font-medium hover:text-emerald-400 transition-colors" href="#docs">
-            Docs
+        <div className="flex items-center w-full max-w-[1400px] m-auto">
+          <a className="flex items-center justify-center" href="#">
+            <Webhook className="h-6 w-6 mr-2 text-emerald-400" />
+            <span className="font-bold text-lg text-emerald-400">web</span>
           </a>
-          <a className="text-sm font-medium hover:text-emerald-400 transition-colors" href="https://github.com/Instantan/web">
-            GitHub
-          </a>
-        </nav>
+          <nav className="ml-auto flex gap-4 sm:gap-6">
+            <a className="text-sm font-medium hover:text-emerald-400 transition-colors" href="#docs">
+              Docs
+            </a>
+            <a className="text-sm font-medium hover:text-emerald-400 transition-colors" href="https://github.com/Instantan/web">
+              GitHub
+            </a>
+          </nav>
+        </div>
       </header>
       <main className="flex-1">
         <section style={{ paddingTop: 120, paddingBottom: 120 }} className="w-full py-8 md:py-20 lg:py-28 xl:py-44 relative overflow-hidden">
