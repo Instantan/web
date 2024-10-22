@@ -21,19 +21,19 @@ export default function LandingPage() {
         </nav>
       </header>
       <main className="flex-1">
-        <section style={{ paddingTop: 175, paddingBottom: 175 }} className="w-full py-12 md:py-24 lg:py-32 xl:py-48 relative overflow-hidden">
+        <section style={{ paddingTop: 120, paddingBottom: 120 }} className="w-full py-8 md:py-20 lg:py-28 xl:py-44 relative overflow-hidden">
           <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:50px_50px]" />
           <div className="container px-4 md:px-6 relative z-10">
-            <div className="flex flex-col items-center space-y-4 text-center">
-              <div className="space-y-2">
-                <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-cyan-400">
-                  The Zero-Dependency Go Web Framework
+            <div className="flex flex-col items-center text-center">
+              <div>
+                <h1 style={{ fontWeight: 900, lineHeight: 1.15 }} className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl/none bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-cyan-400">
+                  The Zero-Dependency<br />Go Framework
                 </h1>
-                <p className="mx-auto max-w-[700px] text-gray-400 md:text-xl">
+                <p className="mx-auto my-7 max-w-[700px] text-gray-400 md:text-xl">
                   Build robust web applications with pure Go. No external dependencies, just the power of the standard library.
                 </p>
               </div>
-              <div className="space-x-4">
+              <div className="mt-2">
                 <Button className="bg-emerald-500 hover:bg-emerald-600 text-gray-950 px-10">Get Started</Button>
               </div>
               <Gopher />

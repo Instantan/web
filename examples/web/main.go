@@ -29,7 +29,7 @@ func main() {
 	w.OpenApi(web.OpenApi{
 		DocPath:   "/api/doc.json",
 		UiPath:    "/api/doc",
-		UiVariant: "scalar",
+		UiVariant: "redoc",
 	})
 
 	w.Tag(web.Tag{

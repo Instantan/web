@@ -134,6 +134,7 @@ func (g Group) openapiPaths(mux *http.ServeMux, components *openapi.Components, 
 				Responses: openapi.Responses{
 					HTTPStatusCodeResponses: map[string]openapi.Response{},
 				},
+				Parameters: []openapi.Parameter{},
 			}
 
 			if api.Parameter.Body.Value != nil {

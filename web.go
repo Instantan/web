@@ -95,6 +95,7 @@ func (web *Web) OpenApi(openapi OpenApi) {
 	assertIsNotEmpty("OpenApi.DocPath", openapi.DocPath)
 	assertIsNotEmpty("OpenApi.UiPath", openapi.UiPath)
 	assertIsNotEmpty("OpenApi.UiVariant", openapi.UiVariant)
+	assertIsOneOf(openapi.UiVariant, []string{"scalar", "swagger", "redoc"})
 	web.openapi = openapi
 }
 
@@ -139,21 +140,22 @@ func (web *Web) Server() http.Handler {
 		references: []string{},
 	}
 
-	openapi := openapi.OpenAPI{}
-	openapi.OpenApi = "3.1.0"
-	openapi.Info = web.info.openapiInfo()
-	openapi.Paths = *web.group.openapiPaths(mux, components, nil, tags)
-	openapi.Components = *components
-	openapi.Tags = tags.openapiTags()
+	oa := openapi.OpenAPI{}
+	oa.OpenApi = "3.1.0"
+	oa.Info = web.info.openapiInfo()
+	oa.Paths = *web.group.openapiPaths(mux, components, nil, tags)
+	oa.Components = *components
+	oa.Tags = tags.openapiTags()
+	oa.Servers = []openapi.Server{}
 
 	if web.contact != nil {
-		openapi.Info.Contact = web.contact.openapiContact()
+		oa.Info.Contact = web.contact.openapiContact()
 	}
 	if web.license != nil {
-		openapi.Info.License = web.license.openapiLicense()
+		oa.Info.License = web.license.openapiLicense()
 	}
 
-	schema, err := json.Marshal(openapi)
+	schema, err := json.Marshal(oa)
 	if err != nil {
 		panic(err)
 	}
@@ -176,7 +178,7 @@ func (web *Web) Server() http.Handler {
 				panic(err)
 			}
 		}
-		_, err := web.typescriptApi.Writer.Write(generate.GenerateTypescriptModels(openapi))
+		_, err := web.typescriptApi.Writer.Write(generate.GenerateTypescriptModels(oa))
 		if err != nil {
 			panic(err)
 		}
@@ -212,7 +214,10 @@ func (license License) openapiLicense() *openapi.License {
 func (openapi OpenApi) httpHandler(title string) http.Handler {
 	switch openapi.UiVariant {
 	case "redoc":
-		return &openapiUiRedoc{}
+		return &openapiUiRedoc{
+			title:  title,
+			docUrl: openapi.DocPath,
+		}
 	case "swagger":
 		return &openapiUiSwagger{
 			title:  title,

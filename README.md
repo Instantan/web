@@ -5,7 +5,6 @@
 ## Todos
 - Find a good api for defining content types
 - Find a good api for defining sockets
-- Add redoc
 
 ## Key Features
 - **Zero Dependencies**: Built entirely on Go's standard library. No external packages required.
