@@ -3,7 +3,6 @@
 > Warning: This package is currently (not even) in alpha, not really tested yet and should not be used yet
 
 ## Todos
-- Find a good api for defining content types
 - Find a good api for defining sockets
 
 ## Key Features

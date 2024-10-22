@@ -29,7 +29,7 @@ func main() {
 	w.OpenApi(web.OpenApi{
 		DocPath:   "/api/doc.json",
 		UiPath:    "/api/doc",
-		UiVariant: "redoc",
+		UiVariant: "scalar",
 	})
 
 	w.Tag(web.Tag{
@@ -66,7 +66,10 @@ func main() {
 			},
 		},
 		Responses: web.Responses{
-			StatusOK: ResponseTest{Say: "Hello world"},
+			StatusOK: web.ContentType{
+				ApplicationJson: ResponseTest{Say: "Hello world"},
+				TextHtml:        "<p>bla</p>",
+			},
 		},
 		Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Add("content-type", "application/json")

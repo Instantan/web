@@ -201,21 +201,30 @@ func (g Group) openapiPaths(mux *http.ServeMux, components *openapi.Components, 
 			}
 
 			createResponse := func(description string, value any) openapi.Response {
-				content := openapi.MediaType{}
-				s := *openapi.ValueToSchema(value)
-				content.Example = value
-				if s.TypeName == "" {
-					content.Schema = s
-				} else {
-					content.Schema.Ref = "#/components/schemas/" + s.TypeName
-					components.Schemas[s.TypeName] = s
+				c := isContentType(value)
+				if c == nil {
+					c = &ContentType{
+						ApplicationJson: value,
+					}
+				}
+
+				mediaTypes := map[string]openapi.MediaType{}
+				for contentType, value := range c.Iterate() {
+					content := openapi.MediaType{}
+					s := *openapi.ValueToSchema(value)
+					content.Example = value
+					if s.TypeName == "" {
+						content.Schema = s
+					} else {
+						content.Schema.Ref = "#/components/schemas/" + s.TypeName
+						components.Schemas[s.TypeName] = s
+					}
+					mediaTypes[contentType] = content
 				}
 
 				return openapi.Response{
 					Description: description,
-					Content: map[string]openapi.MediaType{
-						"application/json": content,
-					},
+					Content:     mediaTypes,
 				}
 			}
 
