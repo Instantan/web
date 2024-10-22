@@ -56,12 +56,18 @@ type ClientOptions = {
 			query: any
 		}
 	}) => void,
-	afterRequest?: (response: any) => void
+	afterRequest?: (response: {
+    status: number,
+    body: any
+  }) => void
 }
 
 function createClient(options?: ClientOptions): Api {
 	const url = options?.url ? options.url : ''
 	return (async (api: any) => {
+    if (options?.beforeRequest) {
+      options.beforeRequest(api)
+    }
 		const query = new URLSearchParams()
 		const queryObj = api?.params?.query || {}
 		Object.keys(queryObj).forEach(name => query.set(name, queryObj[name]))
@@ -74,10 +80,14 @@ function createClient(options?: ClientOptions): Api {
 			method: api.method,
 			body: api?.params?.body,
 		})
-		return {
+    const result = {
 			status: resp.status,
 			body: await resp.json()
 		}
+    if (options?.afterRequest) {
+      options.afterRequest(result)
+    }
+		return result
 	}) as Api
 }
 

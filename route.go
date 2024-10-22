@@ -70,8 +70,8 @@ func (g Group) Api(api Api) {
 		http.MethodOptions,
 		http.MethodTrace,
 	})
-	assertIsNotEmpty("Get.Path", api.Path)
-	assertIsNotNil("Get.Handler", api.Handler)
+	assertIsNotEmpty("Api.Path", api.Path)
+	assertIsNotNil("Api.Handler", api.Handler)
 	*g.routes = append(*g.routes, route{
 		api: &api,
 	})
