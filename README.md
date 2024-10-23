@@ -3,7 +3,8 @@
 > Warning: This package is currently (not even) in alpha, not really tested yet and should not be used yet
 
 ## Todos
-- Find a good api for defining sockets
+- Find a good api for defining sockets -> maybe dont implement sockets
+- Content type handling in generated api
 
 ## Key Features
 - **Zero Dependencies**: Built entirely on Go's standard library. No external packages required.

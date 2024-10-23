@@ -2,46 +2,49 @@
 
 /**
  *  Bla 0.0.1
- */
+*/
 interface Api {
-  (api: {
-    method: 'GET',
-    path: '/test/{name}',
-    params: {
-      path: {
-        name: string;
-      },
-      header?: Record<string, string>,
-    }
-  }): Promise<{
-    status: 200,
-    body: ResponseTest | string
-  }>;
-  (api: {
-    method: 'GET',
-    path: '/test',
-    params: {
-      header?: Record<string, string>,
-    }
-  }): Promise<{
-    status: 200,
-    body: ResponseTest
-  }>;
-  (api: {
-    method: 'GET',
-    path: '/sse',
-    params: {
-      header?: Record<string, string>,
-    }
-  }): Promise<{
-    status: 200,
-    body: ResponseTest
-  }>;
+	(api: {
+		method: 'GET'
+		path: '/test/{name}'
+		params: {
+			path: {
+			  name: string;
+			}
+			header?: Record<string, string>
+		}
+	}): Promise<{
+		status: 200
+		body: ResponseTest | string
+	}>;
+
+	(api: {
+		method: 'GET'
+		path: '/test'
+		params: {
+			header?: Record<string, string>
+		}
+	}): Promise<{
+		status: 200
+		body: ResponseTest
+	}>;
+
+	(api: {
+		method: 'GET'
+		path: '/sse'
+		params: {
+			header?: Record<string, string>
+		}
+	}): Promise<{
+		status: 200
+		body: ResponseTest
+	}>;
 }
 
 type ResponseTest = {
   say: string;
 }
+
 
 type ClientOptions = {
 	url?: string
